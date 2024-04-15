@@ -5,6 +5,11 @@
 class cl_6 : public cl_base {
 public:
 	cl_6(cl_base*, string);
+
+	// Метод сигнала
+	void signal(string&);
+	// Метод обработчика
+	void handler(string);
 };
 
 

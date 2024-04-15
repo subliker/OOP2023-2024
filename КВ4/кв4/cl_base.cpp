@@ -177,9 +177,12 @@ cl_base* cl_base::get(string path) {
 
 // Метод получения абсолютного пути
 string cl_base::path() {
+	if (!getParent()) {
+		return "/";
+	}
 	string p = getName();
 	cl_base* current = getParent();
-	while (current->getParent()) {
+	while (current&&current->getParent()) {
 		p = current->getName() + "/" + p;
 		current = current->getParent();
 	}
@@ -247,22 +250,29 @@ void cl_base::break_connection(TYPE_SIGNAL p_signal, cl_base* p_object, TYPE_HAN
 	}
 }
 
-// Метод сигнала
-void cl_base::signal(string& d) {
-	cout << "Signal from " << path();
-	d += " (class: "+to_string(cl_n)+")";
-}
-
-// Метод обработчика
-void cl_base::handler(string d) {
-	cout << "Signal to " << path() << "   Text: " << d;
-}
-
 cl_base::cl_base(cl_base* p_head_object, string s_object_name, int cl_n) {
 	this->p_head_object = p_head_object;
 	this->s_object_name = s_object_name;
 	this->cl_n = cl_n;
 	if (p_head_object) {
 		p_head_object->subordinate_objects.push_back(this);
+	}
+}
+
+// Получение состояния
+int cl_base::get_state() { 
+	return state;
+}
+
+// Получение номера класса
+int cl_base::get_cl_n() {
+	return cl_n;
+}
+
+// Установка готовности дереву объектов
+void cl_base::set_ready_branch() {
+	this->set_state(1);
+	for (auto child : subordinate_objects) {
+		child->set_ready_branch();
 	}
 }

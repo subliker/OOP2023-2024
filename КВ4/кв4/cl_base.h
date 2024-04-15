@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iostream>
 using namespace std;
 
 class cl_base;
@@ -19,6 +20,7 @@ protected:
 	cl_base* p_head_object;
 	vector < cl_base* > subordinate_objects;
 	int state = 0;
+	int cl_n = 0;
 
 	// КВ 4
 	struct o_sh {
@@ -26,7 +28,6 @@ protected:
 		cl_base* p_cl_base;
 		TYPE_HANDLER p_handler;
 	};
-	int cl_n = 0;
 public:
 	string getName();
 	cl_base* getParent();
@@ -56,10 +57,12 @@ public:
 	// Метод удаления (разрыва) связи между сигналом текущего объекта и обработчиком целевого объекта
 	void break_connection(TYPE_SIGNAL, cl_base*, TYPE_HANDLER);
 
-	// Метод сигнала
-	void signal(string&);
-	// Метод обработчика
-	void handler(string);
+	// Получение состояния
+	int get_state();
+	// Получение номера класса
+	int get_cl_n();
+	// Установка готовности дереву объектов
+	void set_ready_branch();
 };
 
 #endif
