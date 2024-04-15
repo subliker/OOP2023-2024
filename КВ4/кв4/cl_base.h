@@ -18,12 +18,15 @@ protected:
 	string s_object_name;
 	cl_base* p_head_object;
 	vector < cl_base* > subordinate_objects;
-	int state;
+	int state = 0;
+
+	// КВ 4
 	struct o_sh {
 		TYPE_SIGNAL p_signal;
 		cl_base* p_cl_base;
 		TYPE_HANDLER p_handler;
 	};
+	int cl_n = 0;
 public:
 	string getName();
 	cl_base* getParent();
@@ -33,16 +36,30 @@ public:
 	void removeChild(string);
 	cl_base* find_on_branch(string, int* = nullptr);
 	cl_base* find_on_tree(string);
-	cl_base(cl_base* p_head_object, string s_object_name = "Base_object");
+	cl_base(cl_base* p_head_object, string s_object_name, int cl_n);
 	~cl_base();
 	void output_children(int = 3);
 	void output_state(int = 3);
 	void set_state(int);
 	cl_base* get(string);
 
+	// КВ4
+
+	// Метод получения абсолютного пути
 	string path();
+	// Вектор для хранения установленных связей
 	vector < o_sh* > connects;
+	// Метод установи связи
 	void set_connect(TYPE_SIGNAL, cl_base*, TYPE_HANDLER);
+	// Метод выдачи сигнала и отработки соответствующих обработчиков
+	void emit_signal(TYPE_SIGNAL, string&);
+	// Метод удаления (разрыва) связи между сигналом текущего объекта и обработчиком целевого объекта
+	void break_connection(TYPE_SIGNAL, cl_base*, TYPE_HANDLER);
+
+	// Метод сигнала
+	void signal(string&);
+	// Метод обработчика
+	void handler(string);
 };
 
 #endif

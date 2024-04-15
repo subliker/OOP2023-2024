@@ -2,6 +2,7 @@
 #define __CL_APPLICATION__H
 #include <string>
 #include "cl_base.h"
+#include "cl_1.h"	
 #include "cl_2.h"	
 #include "cl_3.h"	
 #include "cl_4.h"	
@@ -10,7 +11,7 @@
 
 using namespace std;
 
-class cl_application : public cl_base {
+class cl_application : public cl_1 {
 public:
 	cl_application(cl_base*);
 	void build_tree_objects();

@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-cl_application::cl_application(cl_base* head) :cl_base(head) {}
+cl_application::cl_application(cl_base* head) :cl_1(head, "") {}
 
 void cl_application::build_tree_objects() {
 	string child_name, parent_path, cmnd;

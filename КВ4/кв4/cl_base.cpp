@@ -2,14 +2,6 @@
 #include <iostream>
 using namespace std;
 
-cl_base::cl_base(cl_base* p_head_object, string s_object_name) {
-	this->p_head_object = p_head_object;
-	this->s_object_name = s_object_name;
-	if (p_head_object) {
-		p_head_object->subordinate_objects.push_back(this);
-	}
-}
-
 cl_base::~cl_base() {
 	for (auto child : subordinate_objects) {
 		delete child;
@@ -181,7 +173,9 @@ cl_base* cl_base::get(string path) {
 	return current;
 }
 
+// КВ4
 
+// Метод получения абсолютного пути
 string cl_base::path() {
 	string p = getName();
 	cl_base* current = getParent();
@@ -192,6 +186,7 @@ string cl_base::path() {
 	return "/" + p;
 }
 
+// Метод установи связи между сигналом текущего объекта и обработчиком целевого объекта
 void cl_base::set_connect(TYPE_SIGNAL p_signal, cl_base* p_object, TYPE_HANDLER   p_ob_handler)
 {
 	o_sh* p_value;
@@ -214,40 +209,60 @@ void cl_base::set_connect(TYPE_SIGNAL p_signal, cl_base* p_object, TYPE_HANDLER 
 	connects.push_back(p_value);          // добавление новой связи                 
 }
 
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-void cl_base::emit_signal(TYPE_SIGNAL p_signal, string & s_command)
-{
+// Метод выдачи сигнала от текущего объекта с передачей строковой переменной
+void cl_base::emit_signal(TYPE_SIGNAL p_signal, string & s_command){
 	TYPE_HANDLER   p_handler;
 	cl_base* p_object;
-	//-------------------------------------------------------------------------
+	
+	// если отключен
+	if (this->state == 0) return;
+
 	(this->*p_signal) (s_command);  // вызов метода сигнала
 
 	for (unsigned int i = 0; i < connects.size(); i++) // цикл по всем обработчикам
 	{
 		if (connects[i]->p_signal == p_signal)      // определение допустимого обработчика
 		{
-			p_handler = connects[i]->p_handler;
 			p_object = connects[i]->p_cl_base;
+			if (p_object->state == 0) continue;
+
+			p_handler = connects[i]->p_handler;
 
 			(p_object->*p_handler) (s_command);      // вызов метода обработчика
 		}
+	}
+}
+
+// Метод удаления (разрыва) связи между сигналом текущего объекта и обработчиком целевого объекта
+void cl_base::break_connection(TYPE_SIGNAL p_signal, cl_base* p_object, TYPE_HANDLER p_ob_handler) {
+	for (auto i = connects.begin(); i != connects.end(); i++) {
+		o_sh* c = *i;
+		if (c->p_cl_base == p_object && 
+			c->p_handler == p_ob_handler && 
+			c->p_signal == p_signal) {
+			connects.erase(i);
+			delete c;
+			return;
+		}
+	}
+}
+
+// Метод сигнала
+void cl_base::signal(string& d) {
+	cout << "Signal from " << path();
+	d += " (class: "+to_string(cl_n)+")";
+}
+
+// Метод обработчика
+void cl_base::handler(string d) {
+	cout << "Signal to " << path() << "   Text: " << d;
+}
+
+cl_base::cl_base(cl_base* p_head_object, string s_object_name, int cl_n) {
+	this->p_head_object = p_head_object;
+	this->s_object_name = s_object_name;
+	this->cl_n = cl_n;
+	if (p_head_object) {
+		p_head_object->subordinate_objects.push_back(this);
 	}
 }
