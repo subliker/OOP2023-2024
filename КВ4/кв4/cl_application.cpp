@@ -57,7 +57,6 @@ void cl_application::build_tree_objects() {
 	}
 	cout << "Object tree" << endl;
 	output_children();
-	cout << endl;
 }
 
 int cl_application::exec_app() {
