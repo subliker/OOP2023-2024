@@ -12,8 +12,12 @@ public:
 	void add_phone(string);
 	// Метод отображения АТС
 	void display_ATC(string);
+	// Метод отображения телефона
+	void display_phone(string);
+	// Метод запроса вызова
+	void call_request(string);
 	// Метод сигнала
-	void signal_output(string);
+	void signal_output(string&);
 	// Конструктор
 	cl_controller(cl_base*);
 };

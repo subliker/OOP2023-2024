@@ -5,7 +5,10 @@ cl_input::cl_input(cl_base* system_ob):cl_base(system_ob, "INPUT") {}
 // Метод чтения данных
 void cl_input::read_data(string& d) {
 	getline(cin, d);
-	if (d == "End of phones") set_state(0);
+	if (d == "End of phones") {
+		set_state(0);
+		d = "";
+	}
 }
 
 // Метод чтения комманд

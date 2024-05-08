@@ -26,8 +26,14 @@ void cl_system::build_tree_objects() {
 	set_connect(SIGNAL_D(cl_system::signal_output), ob_output, HANDLER_D(cl_output::print));
 	ob_controller->set_connect(SIGNAL_D(cl_controller::signal_output), ob_output, HANDLER_D(cl_output::print));
 
+	// call request
+	set_connect(SIGNAL_D(cl_system::signal_call_request), ob_controller, HANDLER_D(cl_controller::call_request));
+
 	// display ATC
 	set_connect(SIGNAL_D(cl_system::signal_display_ATC), ob_controller, HANDLER_D(cl_controller::display_ATC));
+
+	// display phone
+	set_connect(SIGNAL_D(cl_system::signal_display_phone), ob_controller, HANDLER_D(cl_controller::display_phone));
 
 	// input cmnd => handle cmnd
 	set_connect(SIGNAL_D(cl_system::signal_read_cmnd), ob_input, HANDLER_D(cl_input::read_command));
@@ -42,6 +48,7 @@ int cl_system::exec_app() {
 	string s;
 	while (get_state()) {
 		emit_signal(SIGNAL_D(cl_system::signal_read_cmnd), s);
+		t++;
 	}
 
 	return 0;
@@ -53,12 +60,24 @@ void cl_system::handler_cmnd(string cmnd) {
 		string msg = "Turn off the ATM";
 		emit_signal(SIGNAL_D(cl_system::signal_output), msg);
 	}
-	else if (cmnd == "Display system status information") {
+	else if (cmnd == "Display the system status") {
 		emit_signal(SIGNAL_D(cl_system::signal_display_ATC), cmnd);
+	}
+	else if (cmnd.find("Display phone information")!=-1) {
+		emit_signal(SIGNAL_D(cl_system::signal_display_phone), cmnd);
+	}
+	else if (cmnd.find("Call request")!=-1) {
+		emit_signal(SIGNAL_D(cl_system::signal_call_request), cmnd);
+	}
+	else if (cmnd == "SHOWTREE") {
+		output_children();
+
 	}
 }
 
-void cl_system::signal_output(string) {}
-void cl_system::signal_read_cmnd(string){}
-void cl_system::signal_display_ATC(string){}
-void cl_system::signal_controller(string) {}
+void cl_system::signal_output(string&) {}
+void cl_system::signal_read_cmnd(string&){}
+void cl_system::signal_display_ATC(string&) {}
+void cl_system::signal_controller(string&) {}
+void cl_system::signal_display_phone(string&) {}
+void cl_system::signal_call_request(string&) {}

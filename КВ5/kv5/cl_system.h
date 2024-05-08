@@ -10,10 +10,12 @@ using namespace std;
 // Класс объекта «система».
 class cl_system : public cl_base {
 	// Метод сигнала
-	void signal_output(string);
-	void signal_display_ATC(string);
-	void signal_controller(string);
-	void signal_read_cmnd(string);
+	void signal_output(string&);
+	void signal_display_ATC(string&);
+	void signal_controller(string&);
+	void signal_read_cmnd(string&);
+	void signal_display_phone(string&);
+	void signal_call_request(string&);
 
 	// Метод обработчика
 	void handler_cmnd(string);
