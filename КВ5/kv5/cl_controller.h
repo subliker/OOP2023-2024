@@ -6,6 +6,7 @@
 
 // Класс объекта для чтения данных и команд.
 class cl_controller : public cl_base {
+	cl_phone* get_phone(string);
 	vector <cl_phone*> phones;
 public:
 	// Метод добавления номера в базу номеров
